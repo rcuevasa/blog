@@ -48,7 +48,7 @@ prompt_template = PromptTemplate(
 
 response = ollama.generate(model="qwen3", template='prompt_template', format="json")
 ```
-Luego, la incorporación de LangChain requirió algunas modificaciones. El principal desafío surgió de la fecha del tutorial y los cambios operados en el framework de LangChain. Inicialmente intenté usar los mismos ejemplos o similares con poco éxito, y fui comprendiendo la vorágine de transformaciones que han sufrido estos framewoeks en los últimos dos años. El tutorial es de Diciembre de 2023. Varias clases y métodos utilziados en el tutorial estaban obsoletos o habían sufrido modificaciones requiriendo revisar la documentación y la adaptación del código.
+Luego, la incorporación de LangChain requirió algunas modificaciones. El principal desafío surgió de la fecha del tutorial y los cambios operados en el framework de LangChain. Inicialmente intenté usar los mismos ejemplos o similares con poco éxito, y fui comprendiendo la vorágine de transformaciones que han sufrido estos frameworks en los últimos dos años. El tutorial es de Diciembre de 2023. Varias clases y métodos utilziados en el tutorial estaban obsoletos o habían sufrido modificaciones requiriendo revisar la documentación y la adaptación del código.
 
 ```python
 # Define prompt template
