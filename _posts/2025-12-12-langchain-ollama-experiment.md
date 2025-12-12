@@ -1,4 +1,7 @@
-# Desafíos y Soluciones en la Implementación de Agentes LangChain con Ollama
+---
+title: "Usando chains, tools y agentes localmente con LangChain y Ollama"
+date: 2025-12-12
+---
 
 ## Introducción
 
