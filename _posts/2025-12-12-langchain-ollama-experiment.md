@@ -13,7 +13,7 @@ Este artículo relata sucintamente la experiencia del desarrollo de un proyecto 
 
 El objetivo del proyecto era entender el uso de cadenas (chains) de LangChain e implementar agentes con herramientas (tools). Para esto decidí utilizar un tutorial de YouTube de septiembre de 2023, por lo que hubo que adaptar el código para utilizar Ollama con distintos modelos locales de IA. El tutorial utiliza el servicio OpenAI.
 
-### Principales Características
+## Principales Características
 
 - **Generador de nombres para mascotas**: Utiliza cadenas de LangChain para generar nombres creativos basados en especie o tipo de animal y color.
 - **Interfaz Streamlit**: Web simple para interactuar con el generador.
@@ -50,7 +50,7 @@ response = ollama.generate(model="qwen3", template='prompt_template', format="js
 ```
 Luego, la incorporación de LangChain requirió algunas modificaciones. El principal desafío surgió de la fecha del tutorial y los cambios operados en el framework de LangChain. Inicialmente intenté usar los mismos ejemplos o similares con poco éxito, y fui comprendiendo la vorágine de transformaciones que han sufrido estos framewoeks en los últimos dos años. El tutorial es de Diciembre de 2023. Varias clases y métodos utilziados en el tutorial estaban obsoletos o habían sufrido modificaciones requiriendo revisar la documentación y la adaptación del código.
 
-```
+```python
 # Define prompt template
 prompt_template = PromptTemplate(
      input_variables=[...],
@@ -123,7 +123,7 @@ if result.message.tool_calls:
 
 El ecosistema de IA evoluciona vertiginosamente. Los tutoriales de hace solo meses pueden volverse obsoletos rápidamente.
 
-### 2. Las Limitaciones de Framework Exigen Soluciones Alternativas
+## 2. Las Limitaciones de Framework Exigen Soluciones Alternativas
 
 Cuando una implementación estándar no funciona, como en el caso de la ausencia de la inmplementación de `bind_tools()`, es necesario profundizar en el entendimiento de la API subyacente y buscar soluciones directas.
 
