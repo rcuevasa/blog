@@ -123,7 +123,7 @@ if result.message.tool_calls:
 
 El ecosistema de IA evoluciona vertiginosamente. Los tutoriales de hace solo meses pueden volverse obsoletos rápidamente.
 
-## 2. Las Limitaciones de Framework Exigen Soluciones Alternativas
+### 2. Las Limitaciones de Framework Exigen Soluciones Alternativas
 
 Cuando una implementación estándar no funciona, como en el caso de la ausencia de la inmplementación de `bind_tools()`, es necesario profundizar en el entendimiento de la API subyacente y buscar soluciones directas.
 
