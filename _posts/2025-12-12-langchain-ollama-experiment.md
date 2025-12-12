@@ -5,97 +5,105 @@ date: 2025-12-12
 
 ## Introducción
 
-Este artículo relata la experiencia técnica durante el desarrollo de un proyecto experimental de LangChain adaptado para usar modelos locales a través de Ollama, en lugar del servicio OpenAI. Lo que comenzó como un simple seguimiento de tutorial se transformó en un desafío técnico que requirió investigación profunda y experimentación para superar las limitaciones específicas del ecosistema local.
+Hace algún tiempo tuve intenciones de jugar con LangChain y Ollama para aprender sobre la implementación de soluciones usando modelos IA. Un par de semanas atrás instalé Ollama y comencé a revisar la api, y a hacer pruebas, principalmente acerca del tiempo de respuesta para validar que podía utilizarlo experimentalmente sin que las esperas fueran muy grandes.
+
+Este artículo relata sucintamente la experiencia del desarrollo de un proyecto experimental con LangChain adaptado para usar modelos de IA locales a través de Ollama, en lugar de servicios como el de OpenAI. Lo que inició como un sencillo proceso de aprendizaje, siguiendo un tutorial de youtube, se transformó en un desafío técnico que requirió un poco de investigación y bastante experimentación para superar las limitaciones del ecosistema local.
 
 ## Contexto del Proyecto
 
-El proyecto tenía como objetivo entender las cadenas (chains) de LangChain y eventualmente implementar agentes con herramientas (tools). Siguiendo un tutorial de YouTube de septiembre de 2023, se adaptó el código para utilizar Ollama con modelos locales como qwen, deepseek-r1 y llama3.1.
+El objetivo del proyecto era entender el uso de cadenas (chains) de LangChain e implementar agentes con herramientas (tools). Para esto decidí utilizar un tutorial de YouTube de septiembre de 2023, por lo que hubo que adaptar el código para utilizar Ollama con distintos modelos locales de IA. El tutorial utiliza el servicio OpenAI.
 
-### Características Principales
+### Principales Características
 
-- **Generador de nombres para mascotas**: Utiliza cadenas de LangChain para generar nombres creativos basados en tipo y color
-- **Interfaz Streamlit**: Web simple para interactuar con el generador
-- **Soporte de modelos locales**: Funciona con modelos locales en ejecución
-- **Experimentación con agentes**: Intentos iniciales de crear agentes con herramientas
+- **Generador de nombres para mascotas**: Utiliza cadenas de LangChain para generar nombres creativos basados en especie o tipo de animal y color.
+- **Interfaz Streamlit**: Web simple para interactuar con el generador.
+- **Soporte de modelos locales**: Funciona con modelos locales en ejecución.
+- **Experimentación con agentes**: Intentos iniciales de crear agentes con herramientas (tools).
 
-## El Desafío Principal: Adapting a Ollama
+## El Desafío Principal: Adaptándose a Ollama
 
-El primer obstáculo significativo surgió de la desactualización del tutorial. Desde septiembre de 2023 hasta la fecha actual, el framework LangChain ha experimentado cambios sustanciales:
+El primer desafío fue reemplazar las llamadas realizadas a OpenAI con las llamadas necesarias a Ollama:
 
 ```python
-# Ejemplo de código inicial que presentaba problemas
-from langchain_ollama import OllamaLLM
-from langchain.agents import create_agent
+llm = OpenAI(temperature=0.7, openai_api_key=openai_api_key)
 
-model = OllamaLLM(
-    model="deepseek-r1",
-    base_url="http://localhost:11434",
-    stream=False
-)
+prompt_template_name = PromptTemplate(
+        input_variables = [...],
+        template = "..."
+    )
+
+name_chain = LLMChain(llm=llm, prompt=prompt_template_name, output_key="pet_name")
+
+response = name_chain({'animal_type': animal_type, 'pet_color': pet_color})
 ```
 
-Varias clases y métodos utilizados en el tutorial fueron deprecados o modificados, requiriendo investigación constante y adaptación del código.
+La llamada inicial más simple posible fue creada usando directamente ollama sin pasar por LangChain. Cabe desstacar que el método `generate` asume que la conexión es local sin necesidad de pasar argumentos.
+
+```python
+# Define prompt template
+prompt_template = PromptTemplate(
+        input_variables = [...],
+        template = "..."
+    )
+
+response = ollama.generate(model="qwen3", template='prompt_template', format="json")
+```
+Luego, la incorporación de LangChain requirió algunas modificaciones. El principal desafío surgió de la fecha del tutorial y los cambios operados en el framework de LangChain. Inicialmente intenté usar los mismos ejemplos o similares con poco éxito, y fui comprendiendo la vorágine de transformaciones que han sufrido estos framewoeks en los últimos dos años. El tutorial es de Diciembre de 2023. Varias clases y métodos utilziados en el tutorial estaban obsoletos o habían sufrido modificaciones requiriendo revisar la documentación y la adaptación del código.
+
+```
+# Define prompt template
+prompt_template = PromptTemplate(
+     input_variables=[...],
+     template='...',
+)
+
+model = OllamaLLM(
+    model="...",
+    base_url="http://localhost:11434",
+)
+    
+output_parser = JsonOutputParser()
+
+chain = prompt_template | model | output_parser
+return response = chain.invoke({...})
+```
+
+El segundo y principal desafío surgió de la fecha del tutorial y las versiones utilizadas entonces. Desde septiembre de 2023 hasta el presente (Diciembre 2025), el framework LangChain/Ollama ha experimentado cambios sustanciales. Varias clases y métodos utilizados en el tutorial estaban obsoletas o habían sufrido modificaciones, requiriendo investigación constante y adaptación del código.
 
 ## El Obstáculo Crítico: Implementación de Herramientas
 
 El desafío más significativo fue la falta del método `bind_tools()` en la implementación de Ollama, un componente esencial para crear agentes funcionales. Mientras que con OpenAI este proceso es directo:
 
 ```python
-# Con OpenAI sería algo así
-agent = create_agent(model, tools)
-agent.invoke({"messages": [{"role": "user", "content": "question"}]})
+# Con OpenAI sería algo así para la fecha del tutorial
+llm = OpenAI(temperature=0.7, openai_api_key=openai_api_key)
+tools = load_tools([...], llm=llm)
+agent = initialize_agent(tools)
 ```
 
 Con Ollama, este enfoque simplemente no funcionaba, requiriendo una solución alternativa.
 
 ## La Solución: Implementación Directa con la API de Ollama
 
-Después de extensiva investigación y experimentación, se encontró una solución mediante el uso directo de la API de chat de Ollama:
+Después de una extensa investigación y experimentación, encontré una solución al problema del uso de las tools mediante el uso directo de la API de chat de Ollama, pero sin pasar por LangChain:
 
 ```python
-from ollama import ChatResponse, chat
-from datetime import date
+def tool_a()
+def tool_b()
+available_tools = {...}
 
-def current_date() -> str:
-    """Obtener la fecha actual."""
-    return str(date.today())
+mytools = [...]
 
-def tool_wikipedia(query: str) -> str:
-    """Buscar una consulta en wikipedia."""
-    wikipedia.set_lang("en")
-    search_results = wikipedia.summary(query)
-    return search_results
-
-available_tools = {
-    'tool_wikipedia': tool_wikipedia,
-    'current_date': current_date,
-}
-
-mytools = [tool_wikipedia, current_date]
-
-messages = [
-    {
-        "role": "system", 
-        "content": "Eres un asistente útil con herramientas disponibles."
-    },
-    {
-        "role": "user", 
-        "content": "¿Cuál es la fecha actual?"
-    },
-    {
-        "role": "user",
-        "content": "¿Quién es el presidente de Estados Unidos? Usa la herramienta de wikipedia para averiguarlo."
-    }
-]
+messages = [...]
 
 result: ChatResponse = chat(
-    model='qwen3',
+    model='...',
     messages=messages,
     tools=mytools
 )
 ```
 
-Este enfoque permitió superar las limitaciones de la integración LangChain-Ollama, implementando manualmente el ciclo de herramienta:
+Este enfoque permitió superar las limitaciones de la integración LangChain-Ollama, implementando manualmente el ciclo de la herramienta:
 
 ```python
 if result.message.tool_calls:
@@ -113,26 +121,22 @@ if result.message.tool_calls:
 
 ### 1. La Documentación Puede Quedar Rápidamente Desactualizada
 
-El ecosistema de IA evoluciona rápidamente. Los tutoriales de hace solo meses pueden volverse obsoletos rápidamente.
+El ecosistema de IA evoluciona vertiginosamente. Los tutoriales de hace solo meses pueden volverse obsoletos rápidamente.
 
 ### 2. Las Limitaciones de Framework Exigen Soluciones Alternativas
 
-Cuando una implementación estándar no funciona, como en el caso de `bind_tools()`, es necesario profundizar en la API subyacente y buscar soluciones directas.
+Cuando una implementación estándar no funciona, como en el caso de la ausencia de la inmplementación de `bind_tools()`, es necesario profundizar en el entendimiento de la API subyacente y buscar soluciones directas.
 
 ### 3. La Experimentación es Clave
 
-El proyecto requirió probar múltiples modelos (deepseek-r1, qwen3) y enfoques hasta encontrar uno compatible con las herramientas necesarias.
+El proyecto requirió probar múltiples estrategias y enfoques hasta encontrar una compatible con el objetivo.
 
 ## Conclusión
 
-Este proyecto demuestra que incluso un tutorial simple puede presentar desafíos técnicos significativos cuando se adapta a diferentes tecnologías. La perseverancia y la investigación fueron fundamentales para superar los obstáculos particulares de usar Ollama en lugar de OpenAI.
+Este proyecto demuestra que incluso un tutorial simple puede presentar desafíos significativos cuando se adapta a diferentes tecnologías. La perseverancia y la investigación fueron fundamentales para superar los obstáculos presentados al usar Ollama con un modelo IA local en lugar de OpenAI.
 
 La solución final, aunque más compleja que la implementación estándar con OpenAI, proporciona una base funcional para construir agentes con herramientas en un entorno local, ofreciendo privacidad y control sin depender de servicios externos.
 
 ## Código Fuente
 
-El proyecto completo está disponible en [repositorio del proyecto] y muestra la evolución desde la implementación básica hasta la solución funcional de agentes con herramientas.
-
----
-
-*Este artículo refleja la experiencia técnica real durante el desarrollo del proyecto LangChain con Ollama, destacando que la adaptación de tecnologías requiere no solo conocimiento técnico sino también creatividad para encontrar soluciones alternativas.*
+El proyecto completo está disponible en [langchain-test](https://github.com/rcuevasa/langchain-test/) y muestra la evolución desde la implementación básica hasta la solución funcional de agentes con herramientas. El proyecto no ha sido concluido aún, aun cuando, ya cumplió su objetivo inicial. El proyecto tiene dos branches, main que contiene la etapa inicial del desarrollo del generador de nombres de mascotas. El segundo branch se llama test-tools, donde el objetivo fue responder una pregunta asociada a una fecha, en particular la pregunta fue "¿Quién es el actual presidente de los EE.UU.?". 
