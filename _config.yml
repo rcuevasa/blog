@@ -6,5 +6,13 @@ theme: minima
 #minima:
 #  skin: auto
 title: Having fun...
-author: Rodrigo Cuevas A.
+author: 
+   name: Rodrigo Cuevas A.
 description: A simple blog, for simple stories.
+minima:
+   skin: auto
+date_format: "%d-%b-%Y"
+social_links: 
+   - title: Github Page
+     icon: github
+     url: "https://github.com/rcuevasa"
