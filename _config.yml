@@ -1,10 +1,10 @@
 # not the default thene, instead remote
-# theme: minima
-remote_theme: jekyll/minima
-plugins:
-  - jekyll-remote-theme # Required to use the remote theme
+theme: minima
+#remote_theme: jekyll/minima
+#plugins:
+#  - jekyll-remote-theme # Required to use the remote theme
 minima:
-  skin: auto
+#  skin: auto
 title: Having fun...
 author: Rodrigo Cuevas A.
 description: A simple blog, for simple stories.
