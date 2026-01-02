@@ -3,6 +3,7 @@
 remote_theme: jekyll/minima
 plugins:
   - jekyll-remote-theme # Required to use the remote theme
+  - jekyll-feed
 title: Having fun...
 author: 
    name: Rodrigo Cuevas A.
