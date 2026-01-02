@@ -2,4 +2,6 @@ theme: minima
 title: Having fun...
 author: Rodrigo Cuevas A.
 description: A simple blog, for simple stories.
+minima:
+   skin: auto
 
