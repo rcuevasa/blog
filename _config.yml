@@ -10,7 +10,7 @@ author:
 description: A simple blog, for simple stories.
 minima:
    skin: auto
-date_format: "%d-%m-%Y"
+#date_format: "%d-%m-%Y"
 social_links: 
    - title: Github Page
      icon: github
