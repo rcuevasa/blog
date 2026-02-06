@@ -13,3 +13,4 @@ minima:
       - title: Github Page
         icon: github
         url: "https://github.com/rcuevasa"
+   site_favicon: images/favicon.ico
